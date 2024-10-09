@@ -1,0 +1,58 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  clerkId       String         @id @unique
+  email         String         @unique
+  name          String?
+  Subscriptions Subscription[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+}
+
+model Subscription {
+  id          Int        @id @default(autoincrement())
+  name        String
+  amount      Int
+  currency    Currency   @default(INR)
+  startDate   DateTime
+  endDate     DateTime?
+  isRecurring Boolean
+  frequency   Frequency  @default(NONE)
+  status      EnumStatus @default(ACTIVE)
+  userId      String
+  User        User       @relation(fields: userId, references: clerkId)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@index([userId, status])
+}
+
+enum Frequency {
+  DAILY
+  WEEKLY
+  MONTHLY
+  QUARTERLY
+  YEARLY
+  NONE
+}
+
+enum EnumStatus {
+  ACTIVE
+  PAUSED
+  CANCELED
+}
+
+enum Currency {
+  USD
+  EUR
+  GBP
+  INR
+  JPY
+}
