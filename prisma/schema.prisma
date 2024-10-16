@@ -12,6 +12,7 @@ model User {
   email         String         @unique
   name          String?
   Subscriptions Subscription[]
+  currency      Currency       @default(INR)
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
 }
@@ -20,11 +21,10 @@ model Subscription {
   id          Int        @id @default(autoincrement())
   name        String
   amount      Int
-  currency    Currency   @default(INR)
   startDate   DateTime
   endDate     DateTime?
   isRecurring Boolean
-  frequency   Frequency  @default(NONE)
+  frequency   Frequency
   status      EnumStatus @default(ACTIVE)
   userId      String
   User        User       @relation(fields: userId, references: clerkId)
@@ -40,7 +40,6 @@ enum Frequency {
   MONTHLY
   QUARTERLY
   YEARLY
-  NONE
 }
 
 enum EnumStatus {

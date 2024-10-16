@@ -1,18 +1,12 @@
-import type { Metadata } from "next";
-import localFont from "next/font/local";
-import "./globals.css";
+import { GlobalProvider } from "@/GlobalContext";
 import { ClerkProvider } from "@clerk/nextjs";
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import Navbar from "./_components/Navbar";
+import "./globals.css";
+import { Toaster } from "@/components/ui/sonner";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
-});
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Renew Ease",
@@ -27,10 +21,12 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        >
-          {children}
+        <body className={`${inter.className} antialiased`}>
+          <GlobalProvider>
+            <Toaster />
+            <Navbar />
+            <div className="pt-16">{children}</div>
+          </GlobalProvider>
         </body>
       </html>
     </ClerkProvider>
